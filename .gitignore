@@ -2,4 +2,4 @@ __pycache__/
 *.pyc
 *.py~
 *.html~
-.sqlite3
+*.sqlite3
