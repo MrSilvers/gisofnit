@@ -1,0 +1,34 @@
+{% extends 'gis/indexDemo.html' %}
+
+{% block content %}
+<div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+				<div class="am-g">
+					<!-- Row start -->
+						
+				</div>
+				
+				
+				
+				<div class="am-g">
+					<div class="am-u-md-8">	
+						<!--<img style="margin:0px" src="http://api.map.baidu.com/staticimage/v2?ak=fvFZIqg49Onsp6huTcfKbN7mXeaFQRRZ&width=500&height=300&zoom=16&scale=2&center=南昌工程学院"></img>
+						<img style="margin:0px" src="{{map.src}}"></img>
+						-->
+						<div style="width:670px;height:550px;border:#ccc solid 1px;font-size:12px" id="map"></div>
+							
+					</div>
+					
+					<div class="am-u-md-4">
+				        {% block right %}
+				        {% endblock right %}		
+				    </div>
+				    
+
+			    </div>
+		</div>
+		<!-- end right Content here -->
+		</div>
+ 
+{% endblock content %}

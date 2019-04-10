@@ -1,0 +1,74 @@
+{% extends 'gis/indexDemo.html' %}
+{% block title%}后台数据管理{% endblock title %}
+{% block content %}
+<div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+				<div class="am-g">
+					<!-- Row start -->
+						<div class="am-u-sm-12">
+							<div class="card-box">
+								
+								<form class="am-form">
+								  
+								    <legend>标注信息编辑</legend>
+								    <div class="am-form-group">
+								      <label for="doc-vld-name-2">地点名：</label>
+								      <input type="text" id="title" value="{{marker.title}}" placeholder="输入地点名" required/>
+								    </div>
+								
+								    <div class="am-form-group">
+								      <label for="doc-vld-email-2">经度：</label>
+								      <input type="text" id="lng" value="{{marker.lng}}" placeholder="输入经度" required/>
+								    </div>
+								
+								    <div class="am-form-group">
+								      <label for="doc-vld-url-2">纬度：</label>
+								      <input type="text" id="lat" value="{{marker.lat}}" placeholder="输入纬度" required/>
+								    </div>
+								
+								    <div class="am-form-group">
+								      <label for="doc-vld-age-2">描述：</label>
+								      <textarea class="am-u-md-10 form-control" rows="5" id="content" placeholder="输入地点的介绍/描述">{{marker.content}}</textarea>
+								    </div>
+								    <button type="button" onclick="update();">提交</button>
+								    
+								  
+								</form>
+								
+								
+							</div>
+						</div>
+					<!-- Row end -->
+				</div>
+			
+			</div>
+		</div>
+		
+<script>
+
+function update(){
+    var title = $("#title").val();
+    var lng = $("#lng").val();
+    var lat = $("#lat").val();
+    var content = $("#content").val();
+    var id = {{marker.id}};
+    alert(title+","+lng+","+lat);
+    if(title != '' && lng != '' && lat != '' && content != ''){
+        $.post(
+            "{% url 'gis:edit' %}",
+            {"title":title,"lng":lng,"lat":lat,"content":content,"id":id},
+            function(ret){
+                if(ret.status === "True"){
+                    alert("更新成功");
+                    location.href="{% url 'gis:data_admin' %}";
+                }
+                else{
+                    alert("更新失败");
+                }
+            }
+        );
+    }
+}
+</script>
+{% endblock content %}

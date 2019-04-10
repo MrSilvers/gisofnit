@@ -1,0 +1,59 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>南工GIS</title>
+		<link rel="stylesheet" href="{% static 'assets/css/amazeui.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/core.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/menu.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/index.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/admin.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/page/typography.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/page/form.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/component.css' %}" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        
+        <script type="text/javascript" src="{% static 'assets/js/jquery-2.1.0.js' %}" ></script>
+        <!--引用百度地图API-->
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=GZvFroLKArIaZLLAluhx3LQGnkewGFjv"></script>
+        <script type="text/javascript" src="{% static 'assets/js/amazeui.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'assets/js/app.js' %}" ></script>
+		<script type="text/javascript" src="{% static 'assets/js/blockUI.js' %}" ></script>
+		<script type="text/javascript" src="{% static 'assets/js/charts/echarts.min.js' %}" ></script>
+		<script type="text/javascript" src="{% static 'assets/js/charts/indexChart.js' %}" ></script>
+		
+	</head>
+	<body>
+		<!-- Begin page -->
+		<header class="am-topbar am-topbar-fixed-top">		
+			<div class="am-topbar-left am-hide-sm-only">
+                <a href="{% url 'gis:index' %}" class="logo"><span>南工GIS</span><i class="zmdi zmdi-layers"></i></a>
+            </div>
+	        <div class="contain">
+				<ul class="am-nav am-navbar-nav am-navbar-left">
+
+					<li><h4 class="page-title">{% block title%}{% endblock title %}</h4></li>
+				</ul>
+				
+				
+			</div>
+			
+		</header>
+		<!-- end page -->
+		
+		
+		<div class="admin">
+		    {% include 'gis/left.html' %}
+		<!-- ========== Left Sidebar end ========== -->
+	    
+		<!-- Start right Content here -->
+		    {% block content%}{% endblock content %}
+		</div>
+		
+		
+		
+	</body>
+	
+</html>

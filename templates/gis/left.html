@@ -1,0 +1,34 @@
+{% load staticfiles %}
+<div class="admin-sidebar am-offcanvas am-padding-0" id="admin-offcanvas">
+				    <div class="am-offcanvas-bar admin-offcanvas-bar">
+				    	<!-- User -->
+						<div class="user-box am-hide-sm-only">
+	                        <div class="user-img">
+	                            <img src="{% static 'assets/img/index.jpg' %}" alt="user-img" title="Mat Helme" class="img-circle img-thumbnail img-responsive">
+	                        </div>
+	                        
+	                    </div>
+	                    <!-- End User -->
+	            
+						 <ul class="am-list admin-sidebar-list">
+						    
+						    <li class="admin-parent">
+						      <a class="am-cf" data-am-collapse="{target: '#collapse-nav1'}"><span class="am-icon-table"></span> 功能 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+						      <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav1">
+						        <li><a href="{% url 'gis:index' %}" class="am-cf"> 概况</span></a></li>
+						        <li><a href="{% url 'gis:route_plan' %}" class="am-cf"> 线路规划</span></a></li>
+						        <li><a href="{% url 'gis:search' %}">地点搜索</a></li>
+						      </ul>
+						    </li>
+						    
+						    <li class="admin-parent">
+						      <a class="am-cf" data-am-collapse="{target: '#collapse-nav5'}"><span class="am-icon-file"></span> 管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+						      <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav5">
+						        <li><a href="{% url 'gis:add_marker1' %}" class="am-cf"> 输入地名增加地点</a></li>
+						        <li><a href="{% url 'gis:add_marker2' %}" class="am-cf"> 取点增加地点</a></li>
+						        <li><a href="{% url 'gis:data_admin' %}">后台管理</a></li>
+						      </ul>
+						    </li>
+						  </ul>
+				    </div>
+				  </div>

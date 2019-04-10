@@ -1,0 +1,173 @@
+{% extends 'gis/indexDemo.html' %}
+{% block title%}概况{% endblock title %}
+{% block content %}
+<div class="content-page">
+			<!-- Start content -->
+			<div class="content">
+				<div class="am-g">
+					<!-- Row start -->
+						
+				</div>
+				
+				
+				
+				<div class="am-g">
+					<div class="am-u-md-8">	
+						<!--<img style="margin:0px" src="http://api.map.baidu.com/staticimage/v2?ak=fvFZIqg49Onsp6huTcfKbN7mXeaFQRRZ&width=500&height=300&zoom=16&scale=2&center=南昌工程学院"></img>
+						<img style="margin:0px" src="{{map.src}}"></img>
+						-->
+						<div style="width:680px;height:550px;border:#ccc solid 1px;font-size:12px" id="map"></div>
+							
+					</div>
+					
+					<div class="am-u-md-4">
+				        {% block right %}
+				        {% endblock right %}		
+				    </div>
+				    
+
+			    </div>
+		</div>
+		<!-- end right Content here -->
+		</div>
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script>
+	$(document).ready(function(){
+      
+      // 列表 list
+      /*function(){
+          $.getJSON("{% url 'gis:get_marker' %}",function(ret){
+            //返回值 ret 在这里是一个列表
+            for (var i = ret.length - 1; i >= 0; i--) {
+              // 把 ret 的每一项显示在网页上
+              $('#list_result').append(' ' + ret[i])
+            };
+          })
+      }*/
+ 
+      //创建和初始化地图函数：
+    function initMap(){
+      createMap();//创建地图
+      setMapEvent();//设置地图事件
+      addMapControl();//向地图添加控件
+      addMapOverlay();//向地图添加覆盖物
+    }
+    function createMap(){ 
+      map = new BMap.Map("map",{ enableMapClick: false }); 
+      map.centerAndZoom(new BMap.Point(116.038624,28.695625),16);
+      map.setMaxZoom(18);
+      map.setMinZoom(16);
+      
+      if (enableGetPoint == 1){
+        map.addEventListener("click",function(e){
+            //alert(e.point.lng + "," + e.point.lat);
+            $("#lngview").html(e.point.lng);
+            $("#latview").html(e.point.lat);
+            $("#lng").val(e.point.lng);
+            $("#lat").val(e.point.lat);
+        });
+      }
+    }
+    function setMapEvent(){
+      map.enableScrollWheelZoom();
+      map.enableKeyboard();
+      map.enableDragging();
+      map.enableDoubleClickZoom()
+    }
+    function addClickHandler(target,window){
+      target.addEventListener("click",function(){
+        target.openInfoWindow(window);
+      });
+      
+    }
+    /*
+    function addMapOverlay(){
+      var markers = [
+        {content:"我的备注",title:"我的标记",imageOffset: {width:0,height:3},position:{lat:28.698136,lng:116.038462}}
+      ];
+      
+      for(var index = 0; index < markers.length; index++ ){
+        var point = new BMap.Point(markers[index].position.lng,markers[index].position.lat);
+        var marker = new BMap.Marker(point,{icon:new BMap.Icon("http://api.map.baidu.com/lbsapi/createmap/images/icon.png",new BMap.Size(20,25),{
+          imageOffset: new BMap.Size(markers[index].imageOffset.width,markers[index].imageOffset.height)
+        })});
+        var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+        var opts = {
+          width: 200,
+          title: markers[index].title,
+          enableMessage: false
+        };
+        var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+        marker.setLabel(label);
+        addClickHandler(marker,infoWindow);
+        map.addOverlay(marker);
+      };
+    }*/
+
+    function addMapOverlay(){
+      $.getJSON("{% url 'gis:get_marker' %}",function(markers){
+        //测试是否成功加载内容
+        //alert(markers[0].title)
+        for(var index = 0; index < markers.length; index++ ){
+          var point = new BMap.Point(markers[index].lng,markers[index].lat);
+          var marker = new BMap.Marker(point);
+          
+          //新建文字标注
+          //var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+          var opts = {
+            width: 200,
+            title: markers[index].title,
+            enableMessage: false
+          };
+          var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+          
+          //设置文字标注
+          //marker.setLabel(label);
+          addClickHandler(marker,infoWindow);
+          map.addOverlay(marker);
+          };
+      }) 
+    }
+    
+    //向地图添加控件
+    function addMapControl(){
+      
+      var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+      scaleControl.setUnit(BMAP_UNIT_METRIC);
+      map.addControl(scaleControl);
+      var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_RIGHT,type:0});
+      map.addControl(navControl);
+      var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true});
+      map.addControl(overviewControl);
+    }
+    var map;
+    var enableGetPoint = {{enableGetPoint}};
+    initMap();
+    if(enableGetPoint == 1){
+        myValue = '';
+	    loadMapAutocomplete("title");
+        function G(id) {
+            return document.getElementById(id);
+        }
+
+        function loadMapAutocomplete(title) {
+            var checkValue;
+            Ac = new BMap.Autocomplete( //建立一个自动完成的对象
+                {
+                    "input": title,
+                }
+            );
+            Ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+	        var _value = e.item.value;
+	        
+	    	myValue = _value.street +  _value.business;
+	    	$("#title").val(myValue);
+	    });
+        
+        }
+    }
+    
+});
+    
+  </script>
+{% endblock content %}

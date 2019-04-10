@@ -1,0 +1,129 @@
+{% extends 'gis/search_main.html' %}
+{% block title%}线路规划{% endblock title %}
+{% block right %}
+<div class="card-box">
+    <div class="am-form-group">
+      <label for="doc-ipt-email-2">起点</label>
+
+      <input id="start" type="text" class="am-radius" placeholder="输入起点">
+      <hr>
+      <label for="doc-ipt-email-2">起点</label>
+      
+      <input id="end" type="text" class="am-radius" placeholder="输入终点">
+    </div>
+    <button type="button" class="am-btn am-btn-primary" onclick="RoutePlanWalk();"> 步行规划</button>
+    <button type="button" class="am-btn am-btn-primary" onclick="RoutePlanCar();"> 驾车规划</button>
+    <div class="am-form-group am-form-select" id="driving_way">
+		<select class=" am-input-lg am-radius">
+			<option value="1">时间最少</option>
+			<option value="2">最短距离</option>
+		</select>
+	</div>
+
+    <br>
+    <label>描述:</label>
+    <br>
+    <span id="subscribe"></span>
+</div>
+<script>
+myValue = '';
+loadMapAutocomplete("start");
+loadMapAutocomplete("end");
+function G(id) {
+    return document.getElementById(id);
+}
+
+function loadMapAutocomplete(title) {
+    var checkValue;
+    Ac = new BMap.Autocomplete( //建立一个自动完成的对象
+        {
+         "input": title,
+        }
+    );
+    Ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+    var _value = e.item.value;
+	myValue = _value.street +  _value.business;
+	//判断是起点还是终点，将点击的地名按指定格式显示到输入框
+	if(title === 'start'){
+	    $("#start").val(myValue);
+	}
+	else if(title === 'end'){
+	    $("#end").val(myValue);
+	}
+ });
+        
+        }
+//创建和初始化地图函数
+function initMap(){
+    createMap();//创建地图
+    setMapEvent();//设置地图事件
+    addMapControl();//向地图添加控件
+    addMapOverlay();//向地图添加覆盖物
+}
+function createMap(){ 
+    map = new BMap.Map("map",{ enableMapClick: false }); 
+    map.centerAndZoom(new BMap.Point(116.038624,28.695625),16);
+    map.setMaxZoom(18);
+    map.setMinZoom(16);
+}
+function setMapEvent(){
+    map.enableScrollWheelZoom();
+    map.enableKeyboard();
+    map.enableDragging();
+    map.enableDoubleClickZoom()
+}
+    
+function addClickHandler(target,window){
+    target.addEventListener("click",function(){
+    target.openInfoWindow(window);
+    });  
+}
+//向地图添加控件
+function addMapControl(){      
+    var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+    scaleControl.setUnit(BMAP_UNIT_METRIC);
+    map.addControl(scaleControl);
+    var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_RIGHT,type:0});
+    map.addControl(navControl);
+    var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true});
+    map.addControl(overviewControl);
+    
+}
+
+var map;
+initMap();
+
+function RoutePlanWalk(){
+    var start = $("#start").val();
+    var end = $("#end").val();
+    if( start != '' && end != ''){
+        //var walking = new BMap.WalkingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+        map.clearOverlays(); 
+        var walking = new BMap.WalkingRoute(map, {renderOptions: {map: map, panel: "subscribe", autoViewport: true}});
+	    walking.search(start, end);
+    }
+    else{
+	    alert("请完整输入地点")
+	}
+}
+function RoutePlanCar(){
+    var start = $("#start").val();
+    var end = $("#end").val();
+    if( start != '' && end != ''){
+        //最短距离和最少时间
+        var routePolicy = [BMAP_DRIVING_POLICY_LEAST_TIME,BMAP_DRIVING_POLICY_LEAST_DISTANCE];
+		map.clearOverlays(); 
+		var i=$("#driving_way select").val();
+		search(start,end,routePolicy[i]); 
+		function search(start,end,route){ 
+			var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: "subscribe",autoViewport: true},policy: route});
+			driving.search(start,end);
+		}
+	}
+	else{
+	    alert("请完整输入地点")
+	}
+    
+}
+</script>
+{% endblock right %}

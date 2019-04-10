@@ -1,0 +1,57 @@
+{% extends 'gis/map.html' %}
+{% block title %}增加地点{% endblock title%}
+{% block right %}
+<div class="card-box">
+	<h4 class="header-title m-t-0 m-b-30">增加地点</h4>
+		<form class="am-form">
+		    
+			<div class="am-form-group">
+				<label >地点名字</label>
+				<input id="title" type="text" class="am-radius" placeholder="输入地名/建筑物名字">
+				<label>点击地图相应位置获得经纬度</label>
+				<br>
+				<label>经度:<span id="lngview"></span></label>
+				<br>
+				<label>纬度:<span id="latview"></span></label>
+				<input id="lng" type="hidden">
+				<input id="lat" type="hidden">
+				<textarea class="am-u-md-10 form-control" rows="5" id="content" placeholder="输入地点的介绍/描述"></textarea>
+			</div>
+		    <button type="button" onclick="add();">增加</button>
+		    <span id="status"></span>
+	    </form>
+</div>
+<script>
+function add(){
+    var title = $("#title").val();
+    //var title = myValue;
+    //if (title === ''){
+    //    title.$("#title").val();
+    //}
+    var lng = $("#lng").val();
+    var lat = $("#lat").val();
+    var content = $("#content").val();
+    //alert(title + "," + lng + "," + lat + "," + content)
+    alert(title)
+    if(title != "" && content != "" && lng != "" && lat != ""){
+        $.post(
+        "{% url 'gis:add' %}",
+        {'title':title,'lng':lng,'lat':lat,'content':content}, 
+        function(ret){
+            if(ret.status === 'True'){
+                $('#status').html(ret.message);
+                location.reload();
+            }
+            else{
+                $('#status').html(ret.message);
+            }
+        }
+        )
+    }
+    else{
+        alert("请输入完整信息");
+    }
+    
+}
+</script>
+{% endblock right %}
